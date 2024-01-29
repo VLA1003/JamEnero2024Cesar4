@@ -16,7 +16,7 @@ public class timer : MonoBehaviour
 
     private void Awake()
     {
-        if(instance != null && instance != this) 
+        if (instance != null && instance != this)
         {
             Destroy(instance);
         }
@@ -25,6 +25,7 @@ public class timer : MonoBehaviour
             instance = this;
         }
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,30 +34,33 @@ public class timer : MonoBehaviour
         timerSlider.value = gameTime;
         gameTime_ = gameTime;
 
+        // Retraso de 2 segundos antes de comenzar a descontar
+        Invoke("StartTimer", 1f);
+    }
+
+    // Método para comenzar el temporizador después del retraso
+    private void StartTimer()
+    {
+        StartCoroutine(UpdateTimer());
     }
 
     // Update is called once per frame
-    void Update()
+    IEnumerator UpdateTimer()
     {
-        /*float time = gameTime - Time.time;
-
-        int minutes = Mathf.FloorToInt(time / 60);
-        int seconds = Mathf.FloorToInt(time -minutes* 60f);
-
-        string textTime = string.Format("{0:0}:{1:00}", minutes,seconds);*/
-
-        gameTime -= Time.deltaTime;
-
-        if( gameTime <= 0)
+        while (!stopTimer)
         {
+            gameTime -= Time.deltaTime;
 
-            stopTimer = true;
+            if (gameTime <= 0)
+            {
+                stopTimer = true;
+            }
 
-        }
-        if(stopTimer == false)
-        {
-            //timerText.text = textTime;
-            timerSlider.value = gameTime;
+            if (!stopTimer)
+            {
+                timerSlider.value = gameTime;
+                yield return null;
+            }
         }
     }
 
@@ -64,5 +68,7 @@ public class timer : MonoBehaviour
     {
         timerSlider.value = gameTime_;
         gameTime = gameTime_;
+        stopTimer = false;
+        StartCoroutine(UpdateTimer());
     }
 }
