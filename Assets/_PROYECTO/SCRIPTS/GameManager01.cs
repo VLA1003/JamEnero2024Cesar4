@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
         respuesta = float.Parse(txt_eleccion.text);
         
 
-        if (Input.GetKeyDown(KeyCode.Q)) 
+        if (Input.GetKeyDown(KeyCode.Return)) 
         {
             if(respuesta == operacion)
             {
