@@ -1,41 +1,94 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using static GameManager;
 public class GameManager : MonoBehaviour
 {
-    float x, y, result;
+    [SerializeField]
+    TextMeshProUGUI txt_operacion, txt_resultado;
+    [SerializeField]
+    TMP_InputField txt_eleccion;
+    float x, y;
+    float z, v;
     float operacion;
     float aleatorio;
-    public float propio;
+    float respuesta;
+    Operacion nuevaOp;
+
+    public enum Operacion
+    {
+        suma = 0,
+        resta = 1,
+        division = 2,
+        multi = 3
+
+    }
+
     private void Start()
     {
-        aleatorio = UnityEngine.Random.Range(1, 4);
         Generador();
     }
+
+
     private void Update()
     {
-        if (aleatorio == 1)
+        if (z < v && z % v != 0)
         {
-            operacion = x * y;      
+            z = Random.Range(1, 10);
+            v = Random.Range(1, 10);
         }
-        else if (aleatorio == 2)
+        switch (nuevaOp)
         {
-            operacion = x + y;
+            case Operacion.suma:
+                operacion = x + y;
+                txt_operacion.text = (x + "+" + y).ToString();
+                break;
+            case Operacion.resta:
+                operacion = x - y;
+                txt_operacion.text = (x + "-" + y).ToString();
+                break;
+            case Operacion.division:
+                operacion = z / v;
+                txt_operacion.text = (z + "/" + v).ToString();
+                break;
+            case Operacion.multi:
+                operacion = z * v;
+                txt_operacion.text = (z + "*" + v).ToString();
+                break;
+
         }
-        else if (aleatorio == 3)
+        
+        respuesta = float.Parse(txt_eleccion.text);
+        
+
+        if (Input.GetKeyDown(KeyCode.Q)) 
         {
-            operacion = x - y;
-        }
-        else if (aleatorio == 4)
-        {
-            operacion = x % y;
+            if(respuesta == operacion)
+            {
+                txt_resultado.text = "Correcto";
+                Generador();
+            }
+            else
+            {
+                txt_resultado.text = "Incorrecto";
+                Generador();
+            }
         }
     }
     void Generador()
     {
-        x = UnityEngine.Random.Range(0, 100);
-        y = UnityEngine.Random.Range(0, 100);
-        aleatorio = UnityEngine.Random.Range(1, 4);
+        x = Random.Range(0, 100);
+        y = Random.Range(0, 100);
+        z = Random.Range(1, 20);
+        v = Random.Range(1, 20);
+
+        while (z % v != 0)
+        {
+            z++;
+        }
+
+        nuevaOp = (Operacion)Random.Range(0, 4);
+        Debug.Log(x);
     }
 }
