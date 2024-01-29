@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +10,8 @@ public class timer : MonoBehaviour
     [SerializeField] private float gameTime;
 
     private float gameTime_;
+    private float timeRemaining;
+    private Coroutine timerCoroutine; // Agrega una referencia al Coroutine
 
     public bool stopTimer;
 
@@ -18,7 +19,7 @@ public class timer : MonoBehaviour
     {
         if (instance != null && instance != this)
         {
-            Destroy(instance);
+            Destroy(instance.gameObject);
         }
         else
         {
@@ -33,6 +34,7 @@ public class timer : MonoBehaviour
         timerSlider.maxValue = gameTime;
         timerSlider.value = gameTime;
         gameTime_ = gameTime;
+        timeRemaining = gameTime;
 
         // Retraso de 2 segundos antes de comenzar a descontar
         Invoke("StartTimer", 1f);
@@ -41,7 +43,7 @@ public class timer : MonoBehaviour
     // Método para comenzar el temporizador después del retraso
     private void StartTimer()
     {
-        StartCoroutine(UpdateTimer());
+        timerCoroutine = StartCoroutine(UpdateTimer());
     }
 
     // Update is called once per frame
@@ -49,26 +51,32 @@ public class timer : MonoBehaviour
     {
         while (!stopTimer)
         {
-            gameTime -= Time.deltaTime;
-
-            if (gameTime <= 0)
+            if (timeRemaining <= 0)
             {
                 stopTimer = true;
             }
 
             if (!stopTimer)
             {
-                timerSlider.value = gameTime;
+                timeRemaining -= Time.deltaTime;
+                timerSlider.value = timeRemaining;
                 yield return null;
             }
         }
     }
 
+    public void AumentarTiempo(float segundos)
+    {
+        timeRemaining += segundos;
+        timerSlider.value = timeRemaining;
+    }
+
     public void ReinicioTiempo()
     {
+        StopCoroutine(timerCoroutine); // Detiene el Coroutine actual
         timerSlider.value = gameTime_;
-        gameTime = gameTime_;
+        timeRemaining = gameTime_;
         stopTimer = false;
-        StartCoroutine(UpdateTimer());
+        timerCoroutine = StartCoroutine(UpdateTimer()); // Reinicia el temporizador
     }
 }

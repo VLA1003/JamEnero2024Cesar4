@@ -1,20 +1,18 @@
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static GameManager;
+
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    TextMeshProUGUI txt_operacion, txt_resultado;
-    [SerializeField]
-    TMP_InputField txt_eleccion;
+    [SerializeField] TextMeshProUGUI txt_operacion, txt_resultado;
+    [SerializeField] TMP_InputField txt_eleccion;
+
     float x, y;
     float z, v;
     float operacion;
-    float aleatorio;
     float respuesta;
     Operacion nuevaOp;
+    bool gameOver; // Nueva variable para indicar si el juego ha terminado
 
     public enum Operacion
     {
@@ -22,65 +20,78 @@ public class GameManager : MonoBehaviour
         resta = 1,
         division = 2,
         multi = 3
-
     }
+
+    private timer gameTimer;
 
     private void Start()
     {
         txt_eleccion.ActivateInputField();
+        gameTimer = timer.instance;
         Generador();
     }
 
-
     private void Update()
     {
-        if (z < v && z % v != 0)
+        if (!gameOver) // Verifica si el juego está activo
         {
-            z = Random.Range(1, 10);
-            v = Random.Range(1, 10);
-        }
-        switch (nuevaOp)
-        {
-            case Operacion.suma:
-                operacion = x + y;
-                txt_operacion.text = (x + "+" + y).ToString();
-                break;
-            case Operacion.resta:
-                operacion = x - y;
-                txt_operacion.text = (x + "-" + y).ToString();
-                break;
-            case Operacion.division:
-                operacion = z / v;
-                txt_operacion.text = (z + "/" + v).ToString();
-                break;
-            case Operacion.multi:
-                operacion = z * v;
-                txt_operacion.text = (z + "*" + v).ToString();
-                break;
-
-        }
-        
-        respuesta = float.Parse(txt_eleccion.text);
-        
-
-        if (Input.GetKeyDown(KeyCode.Return)) 
-        {
-            if(respuesta == operacion)
+            if (z < v && z % v != 0)
             {
-                txt_resultado.text = "Correcto";
-                Generador();
-                txt_eleccion.text = null;
-                txt_eleccion.ActivateInputField();
+                z = Random.Range(1, 10);
+                v = Random.Range(1, 10);
             }
-            else
+
+            switch (nuevaOp)
             {
-                txt_resultado.text = "Incorrecto";
-                Generador();
-                txt_eleccion.text = null;
-                txt_eleccion.ActivateInputField();
+                case Operacion.suma:
+                    operacion = x + y;
+                    txt_operacion.text = (x + "+" + y).ToString();
+                    break;
+                case Operacion.resta:
+                    operacion = x - y;
+                    txt_operacion.text = (x + "-" + y).ToString();
+                    break;
+                case Operacion.division:
+                    operacion = z / v;
+                    txt_operacion.text = (z + "/" + v).ToString();
+                    break;
+                case Operacion.multi:
+                    operacion = z * v;
+                    txt_operacion.text = (z + "*" + v).ToString();
+                    break;
+            }
+
+            respuesta = float.Parse(txt_eleccion.text);
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (respuesta == operacion)
+                {
+                    txt_resultado.text = "Correcto";
+                    gameTimer.AumentarTiempo(2f); // Aumenta el tiempo en 2 segundos
+                    Generador();
+                    txt_eleccion.text = null;
+                    txt_eleccion.ActivateInputField();
+                }
+                else
+                {
+                    txt_resultado.text = "Incorrecto";
+                    Generador();
+                    txt_eleccion.text = null;
+                    txt_eleccion.ActivateInputField();
+                }
+            }
+
+            // Verifica el tiempo restante y pausa el juego si es necesario
+            if (gameTimer.timerSlider.value <= 0)
+            {
+                txt_resultado.text = "Tiempo Agotado";
+                PausarJuego(); // Pausa el juego cuando se agota el tiempo
+                // Puedes agregar más lógica aquí según tus necesidades
             }
         }
     }
+
     void Generador()
     {
         x = Random.Range(0, 100);
@@ -95,5 +106,11 @@ public class GameManager : MonoBehaviour
 
         nuevaOp = (Operacion)Random.Range(0, 4);
         Debug.Log(x);
+    }
+
+    void PausarJuego()
+    {
+        gameOver = true;
+        Time.timeScale = 0f; // Pausa el tiempo de juego
     }
 }
