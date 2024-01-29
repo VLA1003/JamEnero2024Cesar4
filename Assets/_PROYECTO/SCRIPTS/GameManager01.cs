@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        txt_eleccion.ActivateInputField();
         Generador();
     }
 
@@ -68,11 +69,15 @@ public class GameManager : MonoBehaviour
             {
                 txt_resultado.text = "Correcto";
                 Generador();
+                txt_eleccion.text = null;
+                txt_eleccion.ActivateInputField();
             }
             else
             {
                 txt_resultado.text = "Incorrecto";
                 Generador();
+                txt_eleccion.text = null;
+                txt_eleccion.ActivateInputField();
             }
         }
     }
