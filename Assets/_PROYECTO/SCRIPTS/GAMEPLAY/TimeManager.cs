@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -9,6 +10,12 @@ public class TimeManager : MonoBehaviour
     public float tiempoEditable = 10f;
     public float tiempoReducible;
     public Slider timerSlider;
+    [SerializeField]
+    GameObject gameOver, musicManager;
+    [SerializeField]
+    AudioSource explosionEndSound;
+    [SerializeField]
+    AudioClip explosionClip;
 
     public GameObject gameOverScreen;
 
@@ -18,6 +25,8 @@ public class TimeManager : MonoBehaviour
     }
     private void Start()
     {
+        musicManager.SetActive(true);
+        gameOver.SetActive(false);
         timerSlider.maxValue = tiempoEditable;
         tiempoReducible = tiempoEditable;
     }
@@ -36,8 +45,10 @@ public class TimeManager : MonoBehaviour
     }
     IEnumerator EndGameDelay()
     {
+        musicManager.SetActive(false);
+        gameOver.SetActive (true);
+        explosionEndSound.PlayOneShot(explosionClip);
 
-        gameOverScreen.SetActive(true);
         yield return new WaitForSeconds(3f);
 
         SceneManager.LoadScene("MainmenuScene");

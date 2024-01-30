@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI txt_operacion, txt_resultado;
     [SerializeField] TMP_InputField txt_eleccion;
+    [SerializeField] AudioSource pitidoPreExplosionSound;
 
     float x, y;
     float z, v;
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
                 txt_eleccion.text = null;
                 txt_eleccion.ActivateInputField();
                 TimeManager.timemanager.tiempoReducible = TimeManager.timemanager.tiempoEditable;
+                pitidoPreExplosionSound.Play();
             }
             else
             {
