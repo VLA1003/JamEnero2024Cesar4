@@ -17,7 +17,7 @@ public class TimeManager : MonoBehaviour
     [SerializeField]
     AudioClip explosionClip;
 
-    public GameObject gameOverScreen;
+    public bool gameActive;
 
     private void Awake()
     {
@@ -25,6 +25,7 @@ public class TimeManager : MonoBehaviour
     }
     private void Start()
     {
+        gameActive = true;
         musicManager.SetActive(true);
         gameOver.SetActive(false);
         timerSlider.maxValue = tiempoEditable;
@@ -45,6 +46,7 @@ public class TimeManager : MonoBehaviour
     }
     IEnumerator EndGameDelay()
     {
+        gameActive = false;
         musicManager.SetActive(false);
         gameOver.SetActive (true);
         explosionEndSound.PlayOneShot(explosionClip);

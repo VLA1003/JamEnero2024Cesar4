@@ -5,7 +5,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI txt_operacion, txt_resultado;
     [SerializeField] TMP_InputField txt_eleccion;
-    [SerializeField] AudioSource pitidoPreExplosionSound;
+    [SerializeField] AudioSource sfxSource, sfxSourceAlt;
+    [SerializeField] AudioClip correct, incorrect, pitido;
 
     float x, y;
     float z, v;
@@ -29,51 +30,57 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (z < v && z % v != 0)
+        if (TimeManager.timemanager.gameActive == true)
         {
-            z = Random.Range(1, 20);
-            v = Random.Range(1, 5);
-        }
-        
-        switch (nuevaOp)
-        {
-            case Operacion.suma:
-                operacion = x + y;
-                txt_operacion.text = (x + "+" + y).ToString();
-                break;
-            case Operacion.resta:
-                operacion = x - y;
-                txt_operacion.text = (x + "-" + y).ToString();
-                break;
-            case Operacion.division:
-                operacion = z / v;
-                txt_operacion.text = (z + "/" + v).ToString();
-                break;
-            case Operacion.multi:
-                operacion = z * v;
-                txt_operacion.text = (z + "*" + v).ToString();
-                break;
-        }
-        
-        respuesta = float.Parse(txt_eleccion.text);
-        
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            if (respuesta == operacion)
+            if (z < v && z % v != 0)
             {
-                txt_resultado.text = "Correcto";
-                Generador();
-                txt_eleccion.text = null;
-                txt_eleccion.ActivateInputField();
-                TimeManager.timemanager.tiempoReducible = TimeManager.timemanager.tiempoEditable;
-                pitidoPreExplosionSound.Play();
+                z = Random.Range(1, 20);
+                v = Random.Range(1, 5);
             }
-            else
+
+            switch (nuevaOp)
             {
-                txt_resultado.text = "Incorrecto";
-                Generador();
-                txt_eleccion.text = null;
-                txt_eleccion.ActivateInputField();
+                case Operacion.suma:
+                    operacion = x + y;
+                    txt_operacion.text = (x + "+" + y).ToString();
+                    break;
+                case Operacion.resta:
+                    operacion = x - y;
+                    txt_operacion.text = (x + "-" + y).ToString();
+                    break;
+                case Operacion.division:
+                    operacion = z / v;
+                    txt_operacion.text = (z + "/" + v).ToString();
+                    break;
+                case Operacion.multi:
+                    operacion = z * v;
+                    txt_operacion.text = (z + "*" + v).ToString();
+                    break;
+            }
+
+            respuesta = float.Parse(txt_eleccion.text);
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (respuesta == operacion)
+                {
+                    sfxSourceAlt.Stop();
+                    sfxSourceAlt.PlayOneShot(pitido);
+                    sfxSource.PlayOneShot(correct);
+                    txt_resultado.text = "Correcto";
+                    Generador();
+                    txt_eleccion.text = null;
+                    txt_eleccion.ActivateInputField();
+                    TimeManager.timemanager.tiempoReducible = TimeManager.timemanager.tiempoEditable;
+                }
+                else
+                {
+                    sfxSource.PlayOneShot(incorrect);
+                    txt_resultado.text = "Incorrecto";
+                    Generador();
+                    txt_eleccion.text = null;
+                    txt_eleccion.ActivateInputField();
+                }
             }
         }
     }

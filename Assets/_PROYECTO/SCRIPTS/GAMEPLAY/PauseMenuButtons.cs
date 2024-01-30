@@ -5,6 +5,38 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenuButtons : MonoBehaviour
 {
+    [SerializeField]
+    GameObject pauseContainer;
+
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (pauseContainer.activeInHierarchy == true)
+            {
+                pauseContainer.SetActive(false);
+            }
+            else
+            {
+                pauseContainer.SetActive(true);
+            }
+        }
+    }
+    public void Reset()
+    {
+        SceneManager.LoadScene("GameplayScene");
+    }
+    public void Resume()
+    {
+        if (pauseContainer.activeInHierarchy == true)
+        {
+            pauseContainer.SetActive(false);
+        }
+        else
+        {
+            pauseContainer.SetActive(true);
+        }
+    }
     public void ReturnToMainMenu()
     {
         SceneManager.LoadScene("MainmenuScene");
