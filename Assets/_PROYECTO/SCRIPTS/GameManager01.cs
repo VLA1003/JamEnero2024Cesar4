@@ -105,7 +105,6 @@ public class GameManager : MonoBehaviour
         }
 
         nuevaOp = (Operacion)Random.Range(0, 4);
-        Debug.Log(x);
     }
 
     void PausarJuego()
