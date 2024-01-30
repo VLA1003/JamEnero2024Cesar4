@@ -10,6 +10,8 @@ public class TimeManager : MonoBehaviour
     public float tiempoReducible;
     public Slider timerSlider;
 
+    public GameObject gameOverScreen;
+
     private void Awake()
     {
         timemanager = this;
@@ -35,7 +37,7 @@ public class TimeManager : MonoBehaviour
     IEnumerator EndGameDelay()
     {
 
-
+        gameOverScreen.SetActive(true);
         yield return new WaitForSeconds(3f);
 
         SceneManager.LoadScene("MainmenuScene");
