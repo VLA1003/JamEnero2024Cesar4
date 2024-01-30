@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 public class ButtonController : MonoBehaviour
 {
     public void StartGame()
     {
-        // Validar en cuanto se haya completado el juego.
-        // SceneManager.LoadScene("GameplayScene");
+        SceneManager.LoadScene("GameplayScene");
     }
 
     public void ExitGame()

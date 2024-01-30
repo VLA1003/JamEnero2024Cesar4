@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_PROYECTO/SCENAS/timer.unity
+    path: Assets/_PROYECTO/SCENAS/MainmenuScene.unity
+    guid: 1674d2c67b9b48e489d054a3e850696c
+  - enabled: 1
+    path: Assets/_PROYECTO/SCENAS/GameplayScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
